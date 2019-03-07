@@ -1,0 +1,138 @@
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>Blake Belladonna</title>
+	<style type="text/css"> 
+		@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600);
+
+		#create input[type="text"], #create textarea, #create button[type="submit"] { font:400 12px/16px "Open Sans", Helvetica, Arial, sans-serif; }
+
+		#create h3 {
+			color: #F96;
+			display: block;
+			font-size: 30px;
+			font-weight: 400;
+		}
+
+		#create h4 {
+			margin:5px 0 15px;
+			display:block;
+			font-size:13px;
+		}
+
+		#create input[type="text"], #contact textarea {
+			width:100%;
+			background:#FFF;
+			margin:0 0 5px;
+			padding:10px;
+			font-size: 17px;
+		}
+
+		#create textarea {
+			height:300px;
+			width:100%;
+			resize:none;
+            padding:10px;
+			font-size: 20px;
+            line-height:25px
+		}
+
+		#create button[type="submit"] {
+			cursor:pointer;
+			width:100%;
+			border:none;
+			background:#0CF;
+			color:#FFF;
+			margin:0 0 5px;
+			padding:10px;
+			font-size:15px;
+		}
+		
+		#create fieldset {
+			border:none;
+		}
+
+		#create button[type="submit"]:hover {
+			background:#09C;
+			-webkit-transition:background 0.3s ease-in-out;
+			-moz-transition:background 0.3s ease-in-out;
+			transition:background-color 0.3s ease-in-out;
+		}
+
+		#create button[type="submit"]:active { box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.5); }
+
+		
+	</style>
+</head>
+<body>
+<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor=#FFFFFF style="border-collapse:collapse;">
+    <tr>
+        <td><center style="width: 100%;">
+
+            <!-- Email Header : BEGIN -->
+            <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
+                <tr>
+                    <td style="text-align: center" width="50%">
+                        <img src="https://www.skyblond.info/pic/email/logo.png" width="290">
+                    </td>
+                </tr>
+            </table>
+     
+            <table cellspacing="0" cellpadding="0" align="center" bgcolor="#ffffff" width="100%" style="max-width: 680px;">
+                <tr>
+                    <td class="full-width-image" align="center">
+                        <div style="background-color:white;border-top:2px solid #12ADDB;box-shadow:0 1px 3px #AAAAAA;line-height:180%;padding:0 15px 12px;width:680px;margin:50px auto;color:#555555;font-family:'Century Gothic','Trebuchet MS','Hiragino Sans GB',微软雅黑,'Microsoft Yahei',Tahoma,Helvetica,Arial,'SimSun',sans-serif;font-size:15px;">
+                            <h1 style="border-bottom:1px solid #DDD;font-size:19px;font-weight:normal;padding:13px 0 10px 8px;">
+                                <span style="color: #12ADDB;font-weight: bold;">&gt;&nbsp; </span>创建一条阅后即焚消息<br>Create a new burn-after-reading message</h1>
+                            <div style="padding:0 12px 0 12px;margin-top:18px;text-align: left">
+								<p style="padding: 5px 10px;width: 100%;font-size: 15px; font-family: sans-serif; mso-height-rule: exactly; line-height:19px; color: #ff0000;"><br>
+									请注意：你正在编辑的信息将被储存到服务器上，并且没有经过加密。<br>
+									这意味着网站的主人可以看到你输入的内容。<br>
+									因此请不要在此处输入任何隐私信息。<br>
+									除非确保它已经被妥当加密，并且你愿意承担这些信息被泄露的后果。<br>
+									否则请不要在此处输入任何不宜公开的信息。<br>
+									<br>
+									Please be aware that the message you're editing is going to be stored on this server, WITHOUT ANY ENCRYPTION. Which means the hoster of the server may SEE WHAT YOU WRITE BELOW.<br>
+									So please DO NOT WRITE ANYTHING PRIVATE BELOW, unless it has been encrypted properly, and YOU SHOULD BEAR THE CONSEQUENCES OF PRIVACY LEAK.
+								</p>
+								<center>
+									<form id="create" action="new-message" method="post">
+										<fieldset>
+										  <input name="title" placeholder="标题 / Title" type="text" tabindex="1" required autofocus>
+										</fieldset>
+										<fieldset>
+										  <textarea name="content" placeholder="消息内容 / Type your message here..." tabindex="2" required></textarea>
+										</fieldset>
+										<fieldset>
+										  <button type="submit" id="create-submit" data-submit="...Creating" tabindex="3" >Submit</button>
+										</fieldset>
+									  </form>
+								</center>
+								
+                            </div>
+                            <div style="background-image: url(https://www.skyblond.info/pic/email/flower.png);background-repeat: no-repeat;background-position: top center;background-size: 140px 215px;text-align: right">
+                                <br><br>
+                                <br><br><br><br><br>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <table cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
+                <tr>
+                    <td style="padding: 5px 10px;width: 100%;font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height:18px; text-align: center; color: #888888;"><br>
+                        <br>
+                        天空 Blond © 2019<br>
+                        <a style="text-decoration:none; color:#12addb" href="天空 Blond" target="_blank">https://www.skyblond.info</a>
+                    </td>
+                </tr>
+            </table>
+            
+
+
+        </center></td>
+    </tr>
+</table>
+</body>
+</html>
