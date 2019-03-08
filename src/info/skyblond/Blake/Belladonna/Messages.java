@@ -3,18 +3,15 @@ package info.skyblond.Blake.Belladonna;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.Timestamp;
-import java.util.Base64;
-import java.util.Random;
+import java.util.*;
 import java.util.zip.CRC32;
 
 public class Messages {
     private String title = "", content = "";
     private Timestamp sendTime = new Timestamp(System.currentTimeMillis());
-    //0 for burn after reading or time up, default
-    //1 preserve forever, disabled when admin password is empty
 
     public boolean isExpired(){
         if(PropertiesUtils.getProperties().getMessageExpiredTime() == 0)
@@ -73,8 +70,45 @@ public class Messages {
         return name;
     }
 
+    public static Messages findMessageFile(String name) throws IOException {
+        List<Messages> result = Collections.synchronizedList(new LinkedList<>());
+        result.clear();
+        Files.walkFileTree(PropertiesUtils.getProperties().getDataDirectory(), new SimpleFileVisitor<Path>(){
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Objects.requireNonNull(file);
+                if(file.getFileName().toString().toUpperCase().equals(name.toUpperCase())){
+                    String read = String.join("",Files.readAllLines(file));
+                    Messages messages;
+                    try{
+                        messages = Share.gson.fromJson(read, Messages.class);
+                    }catch (Exception e){
+                        System.out.println(read);
+                        e.printStackTrace();
+                        messages = null;
+                    }finally {
+                        if(Files.exists(file))
+                            Files.delete(file);
+                    }
+                    if(messages != null)
+                        result.add(messages);
+                    return FileVisitResult.TERMINATE;
+                }
+                return super.visitFile(file, attrs);
+            }
+        });
+        if(result.size() == 0)
+            return null;
+        return result.get(0);
+    }
+
     public String storeToMysql(){
         //TODO
+        return null;
+    }
+
+    public static Messages findMessageMysql(String name){
+        // TODO
         return null;
     }
 

@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 public class PropertiesUtils {
-    public static final String DEFAULT_PATH = ".//belladonna.properties";
+    public static final String DEFAULT_PATH = Share.filePrefix + ".//belladonna.properties";
 
     private static final Properties properties = new Properties();
 
@@ -74,7 +74,23 @@ public class PropertiesUtils {
                 Share.logger.warn("Empty " + Property.DATA_DIRECTORY_FIELD + ". Using default: " + Property.property.getDataDirectory());
                 needUpdate = true;
             }else {
+                tmpString = Share.filePrefix + tmpString;
                 Property.property.setDataDirectory(Paths.get(tmpString));
+            }
+
+            if (Files.notExists(PropertiesUtils.getProperties().getDataDirectory())) {
+                try {
+                    Files.createDirectories(PropertiesUtils.getProperties().getDataDirectory());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            try {
+                Property.property.setMaxMessage(Long.parseLong(properties.getProperty(Property.MAX_MESSAGES_FIELD)));
+            }catch (NumberFormatException e){
+                Share.logger.error("Invalidate " + Property.MAX_MESSAGES_FIELD + ". Using default: " + Property.property.getMaxMessages());
+                needUpdate = true;
             }
 
 
@@ -131,6 +147,7 @@ public class PropertiesUtils {
             Share.logger.warn("Empty " + Property.MESSAGE_THEME_FIELD + ". Using default: " + Property.property.getMessageTheme());
             needUpdate = true;
         }else {
+            tmpString = Share.filePrefix + tmpString;
             Property.property.setMessageTheme(Paths.get(tmpString));
         }
 
@@ -139,6 +156,7 @@ public class PropertiesUtils {
             Share.logger.warn("Empty " + Property.CREATE_THEME_FIELD + ". Using default: " + Property.property.getCreateTheme());
             needUpdate = true;
         }else {
+            tmpString = Share.filePrefix + tmpString;
             Property.property.setCreateTheme(Paths.get(tmpString));
         }
 
@@ -147,12 +165,12 @@ public class PropertiesUtils {
             Share.logger.warn("Empty " + Property.SUCCEED_THEME_FIELD + ". Using default: " + Property.property.getSucceedTheme());
             needUpdate = true;
         }else {
+            tmpString = Share.filePrefix + tmpString;
             Property.property.setSucceedTheme(Paths.get(tmpString));
         }
 
         try {
-            tmpInt = Integer.parseInt(properties.getProperty(Property.MESSAGE_EXPIRED_TIME_FIELD));
-            Property.property.setMessageExpiredTime(tmpInt);
+            Property.property.setMessageExpiredTime(Long.parseLong(properties.getProperty(Property.MESSAGE_EXPIRED_TIME_FIELD)));
         }catch (NumberFormatException e){
             Share.logger.error("Invalidate " + Property.MESSAGE_EXPIRED_TIME_FIELD + ". Using default: " + Property.property.getMessageExpiredTime());
             needUpdate = true;
@@ -173,6 +191,7 @@ public class PropertiesUtils {
         properties.setProperty(Property.IP_FIELD, Property.property.getIP() + "");
 //        properties.setProperty(Property.DATA_MODE_FIELD, Property.property.getDataMode() + "");
         properties.setProperty(Property.DATA_DIRECTORY_FIELD, Property.property.getDataDirectory() + "");
+        properties.setProperty(Property.MAX_MESSAGES_FIELD, Property.property.getMaxMessages() + "");
 //        properties.setProperty(Property.MYSQL_ADDR_FIELD, Property.property.getMysqlAddr() + "");
 //        properties.setProperty(Property.MYSQL_PORT_FIELD, Property.property.getMysqlPort() + "");
 //        properties.setProperty(Property.MYSQL_DATABASE_NAME_FIELD, Property.property.getMysqlDatabaseName() + "");
@@ -233,16 +252,19 @@ class Property{
 //    private String mysqlPassword = "";
 //    public static final String MYSQL_PASSWORD_FIELD = "mysql_password";
 
-    private Path dataDirectory = Paths.get(".//messages");
+    private Path dataDirectory = Paths.get("messages");
     public static final String DATA_DIRECTORY_FIELD = "data_directory";
 
-    private Path messageTheme = Paths.get(".//message.html");
+    private long maxMessage = 100000;
+    public static final String MAX_MESSAGES_FIELD = "max_messages";
+
+    private Path messageTheme = Paths.get("message.html");
     public static final String MESSAGE_THEME_FIELD = "message_theme";
 
-    private Path createTheme = Paths.get(".//create.html");
+    private Path createTheme = Paths.get("create.html");
     public static final String CREATE_THEME_FIELD = "create_theme";
 
-    private Path succeedTheme = Paths.get(".//createSucceed.html");
+    private Path succeedTheme = Paths.get("createSucceed.html");
     public static final String SUCCEED_THEME_FIELD = "succeed_theme";
 
     private long messageExpiredTime = 7*24*60*60L; //7days, in second
@@ -318,6 +340,14 @@ class Property{
 
     void setDataDirectory(Path dataDirectory) {
         this.dataDirectory = dataDirectory;
+    }
+
+    public long getMaxMessages() {
+        return maxMessage;
+    }
+
+    public void setMaxMessage(long maxMessage) {
+        this.maxMessage = maxMessage;
     }
 
     public long getMessageExpiredTime() {

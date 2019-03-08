@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -28,18 +29,20 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
+    public static final boolean isDebug = false; // turn to false when make final artifacts
 
     public static final String POST_TITLE_FIELD = "title";
     public static final String POST_CONTENT_FIELD = "content";
 
     public static void main(String[] args) {
 
-        PropertiesUtils.getProperties(); //read first
+        if(isDebug){
+            Share.filePrefix = ".//"; //using class path when debug.
+        }
+
+        PropertiesUtils.getProperties();
 
         Javalin app = Javalin.create();
-        app.get("/", ctx -> {
-            ctx.redirect("https://github.com/hurui200320/Blake-Belladonna");
-        });
 
         app.get("/create", ctx -> {
             ctx.header("content-type","text/html; charset=UTF-8");
@@ -50,9 +53,9 @@ public class Main {
             Messages messages;
             if(true)
 //            if(PropertiesUtils.getProperties().getDataMode() == 0)
-                messages = Share.findMessageFile(ctx.pathParam("checksum").toUpperCase());
+                messages = Messages.findMessageFile(ctx.pathParam("checksum").toUpperCase());
             else
-                messages = Share.findMessageMysql(ctx.pathParam("checksum").toUpperCase());
+                messages = Messages.findMessageMysql(ctx.pathParam("checksum").toUpperCase());
             if(messages == null){
                 ctx.status(410);
                 return;
@@ -62,6 +65,14 @@ public class Main {
         });
 
         app.post("/new-message", ctx -> {
+            File[] list = PropertiesUtils.getProperties().getDataDirectory().toFile().listFiles();
+            if(list != null && list.length >= PropertiesUtils.getProperties().getMaxMessages()){
+                ctx.status(500);
+                ctx.result("Too many message files in data directory!");
+                Share.logger.error("Too many message files in data directory!");
+                return;
+            }
+
             Map<String, List<String>> raw = ctx.formParamMap();
             if(raw.keySet().containsAll(Arrays.asList(POST_TITLE_FIELD, POST_CONTENT_FIELD))){
                 Messages messages = new Messages();
@@ -94,7 +105,12 @@ public class Main {
                 ctx.result(String.join("\n", Files.readAllLines(PropertiesUtils.getProperties().getSucceedTheme())).replace("{{% code %}}", result));
             }else {
                 ctx.status(400);
+                ctx.result("bad request");
             }
+        });
+
+        app.get("/*", ctx -> {
+            ctx.redirect("https://github.com/hurui200320/Blake-Belladonna");
         });
 
         //period call gc and delete expired message.
@@ -103,24 +119,25 @@ public class Main {
             @Override
             public void run() {
                 try {
-                    Files.walkFileTree(PropertiesUtils.getProperties().getDataDirectory(), new SimpleFileVisitor<Path>(){
-                        @Override
-                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                            Objects.requireNonNull(file);
-                            Messages messages;
-                            try{
-                                messages = Share.gson.fromJson(String.join("",Files.readAllLines(file)), Messages.class);
-                            }catch (Exception e){
-                                Files.delete(file);
-                                return FileVisitResult.TERMINATE;
+                    if(PropertiesUtils.getProperties().getMessageExpiredTime() != 0)
+                        Files.walkFileTree(PropertiesUtils.getProperties().getDataDirectory(), new SimpleFileVisitor<Path>(){
+                            @Override
+                            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                                Objects.requireNonNull(file);
+                                Messages messages;
+                                try{
+                                    messages = Share.gson.fromJson(String.join("",Files.readAllLines(file)), Messages.class);
+                                }catch (Exception e){
+                                    Files.delete(file);
+                                    return FileVisitResult.TERMINATE;
+                                }
+
+                                if(messages.isExpired() && Files.exists(file))
+                                    Files.delete(file);
+
+                                return super.visitFile(file, attrs);
                             }
-
-                            if(messages.isExpired())
-                                Files.delete(file);
-
-                            return super.visitFile(file, attrs);
-                        }
-                    });
+                        });
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
