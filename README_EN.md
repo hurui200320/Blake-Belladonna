@@ -73,11 +73,11 @@ ctx.result(String.join("\n", Files.readAllLines(PropertiesUtils.getProperties().
 
 There is a `if(true)`, because I want the program store messages both in file and MySQL. But then I found that it's not necessary to implement a MySQL version, that's I leave them here. I will finish it later. Maybe.
 
-程序首先寻找指定的消息，如果没有找到则直接返回状态码`410`。找到之后按照模板，默认情况下是与程序同目录下的`message.html`文件，文件输出时会将把标题占位符`{{% title %}}`替换成消息的标题，将内容占位符`{{% content %}}`替换为消息的实际内容。因此在二次开发或更换模板时应注意这些占位符，消息内容将被原封不动的插入到模板中，因此对于内容的预处理应当在创建消息时考虑。
+The program will find the message first. When find nothing, the server will return the status code `410`. After finding the message, the program will render the page according to the template, in default it's `message.html` located in the same folder with program. The placeholder `{{% title %}}` will be replaced by the message's title, and `{{% content %}}` is the content of message. ***The content will be put in template directly, which means the content will be treated as html code.***
 
 #### `/new-message` `POST`
 
-这个节点使用`POST`请求来处理创建消息的，通常由`/create`的表单发出请求。该节点接到请求时先检查已有消息的数量：
+This path creates messages by `POST` requests, which is always started by the form in `/create`. The program will check the amount of messages which are already exists.
 
 ```java
 File[] list = PropertiesUtils.getProperties().getDataDirectory().toFile().listFiles();
@@ -89,7 +89,7 @@ if(list != null && list.length >= PropertiesUtils.getProperties().getMaxMessages
 }
 ```
 
-如果已有消息数目达到了设定的数目，那么服务器返回状态码`500`，同时返回目录中保存的消息过多的提示信息。若没有超过数量限制，程序将检查`POST`请求所需要的必须字段：
+If the total amount reach the max number, it will return status code `500` with notice message. Otherwise the program check the parameters of the request: 
 
 ```java
 Map<String, List<String>> raw = ctx.formParamMap();
@@ -101,14 +101,14 @@ if(raw.keySet().containsAll(Arrays.asList(POST_TITLE_FIELD, POST_CONTENT_FIELD))
 }
 ```
 
-其中检查用的两个字段由常量定义：
+The name of two parameters are defined by two constants:
 
 ```java
 public static final String POST_TITLE_FIELD = "title";
 public static final String POST_CONTENT_FIELD = "content";
 ```
 
-如果请求中包含的键名不包括必需的字段，服务器将返回状态码`400`和对应的提示。如果有对应的字段则进行下一步处理：
+If the request doesn't meet the needs, server will return status code `400` and notice message. Otherwise the program will process the message to store it:
 
 ```java
 Messages messages = new Messages();
@@ -141,59 +141,59 @@ ctx.header("content-type","text/html; charset=UTF-8");
 ctx.result(String.join("\n", Files.readAllLines(PropertiesUtils.getProperties().getSucceedTheme())).replace("{{% code %}}", result));
 ```
 
-消息标题保留原样，针对每一行内容都翻译成`HTML`的段落。如果以特定的`#!&$>`开头，则不进行翻译。完成后对消息进行储存，储存成功后将得到一个对应的`ID`，此时服务器返回状态码`201`，同时引用模板将得到的`ID`显示给用户。默认情况下模板是与程序同目录下的`createSucceed.html`，其中的占位符`{{% code %}}`替换成得到的`ID`。
+The title of the message won't change. Every line of the content will be translated in `HTML` paragraph, unless it start with special characters `#!&$>`. Then store it and return a corresponding `ID`. At this time, server return status code `201` and render the web page according to the template. In default it's `createSucceed.html`. The placeholder `{{% code %}}` is the `ID`.
 
 #### `/*` `GET`
 
-这个节点的代码就一行：
+This path only does one line work:
 
 ```java
 ctx.redirect("https://github.com/hurui200320/Blake-Belladonna");
 ```
 
-你猜猜他是干啥的？
+Guess what dose it do?
 
-### 后端操作
+### Backend operation
 
-#### `properties`文件
+#### `properties` file
 
-程序默认使用Java提供的`properties`文件存储设置。当前版本的设置次列如下：
+There is a `properties` file store the settings of this program. Here are the explanations.
 
 ##### `ip`
 
-这个字段是设置Javalin内置服务器Jetty所监听的IP地址。默认值：`0.0.0.0`
+The IP address the internal Jetty server(in Javalin) listening. Default is `0.0.0.0`
 
 ##### `port`
 
-这个字段是设置Javalin内置服务器Jetty所监听的端口号。默认值：`7000`
+The port the internal Jetty server(in Javalin) listening. Default is `7000`
 
 ##### `data_directory`
 
-该字段设置程序储存消息所用的文件夹路径。为了避免不同系统下文件分隔符的不兼容，这里强制使用相对路径下的名称，文件夹将与程序处在同一目录下。默认值：`messages`
+The directory where the program store the messages file. In case there different path style in different OS, this parameter use ***ONLY*** relative path, relative with program. Default is `messages`
 
 ##### `message_theme`
 
-该字段储存程序渲染显示消息页面所用的模板。为了避免不同系统下文件分隔符的不兼容，这里强制使用相对路径下的名称，模板需与程序处在同一目录下。默认值：`message.html`
+The template using to render the message page. Default is `message.html`
 
 ##### `create_theme`
 
-该字段储存程序渲染显示消息页面所用的模板。为了避免不同系统下文件分隔符的不兼容，这里强制使用相对路径下的名称，模板需与程序处在同一目录下。默认值：`create.html`
+The template using to render the create message page. Default is `create.html`
 
 ##### `createSucceed`
 
-该字段储存程序渲染显示消息页面所用的模板。为了避免不同系统下文件分隔符的不兼容，这里强制使用相对路径下的名称，模板需与程序处在同一目录下。默认值：`message.html`
+The template using to render the message create succeed page. Default is `message.html`
 
 ##### `message_expired_time`
 
-该字段保存消息的有效期，单位是秒。过期的消息将会被定期删除。设置位`0`时忽略有效期，消息一直有效。默认值：`604800`
+The time store on server in the unit of second. A message remain on server longer than this time will be automatic deleted. Set to `0` to ignore this. Default is `604800`
 
 ##### `max_messages`
 
-该字段保存最大允许储存的消息数目，即储存消息目录下最大的文件数目。当消息数量超过此数量时，创建消息的操作将被返回状态码`500`。默认值`100000`
+The max amount of message stored on server. Reach this limit will result in status code `500` when creating new messages. Default is  `100000`
 
-#### 定时检查
+#### Regular check
 
-主函数在启动Javalin服务器之后还注册了定时任务。当前版本的设定是每小时执行一次。定时任务内容如下：
+The main function will register periodic task after starting the Javalin server. Task will be execute every hour:
 
 ```java
 if(PropertiesUtils.getProperties().getMessageExpiredTime() != 0)
@@ -217,20 +217,18 @@ if(PropertiesUtils.getProperties().getMessageExpiredTime() != 0)
 	});
 ```
 
-定时任务执行时将会读取每个文件并检查其是否过期。过期则删除文件。
+It will read every message and check if it is expired. The message will be deleted if expired. Also it will call `gc()` at the end.
 
-同时每次定期任务执行结束时将调用`gc()`。
+#### The store of messages(file)
 
-#### 消息的储存（文件）
-
-在当前版本中消息的实现中有如下成员变量：
+The member variables in `Messages.class` are below:
 
 ```java
 private String title = "", content = "";
 private Timestamp sendTime = new Timestamp(System.currentTimeMillis());
 ```
 
-同时还有成员函数：
+And the member functions:
 
 ```java
 public boolean isExpired(){
@@ -285,9 +283,9 @@ public String toString() {
 }
 ```
 
-其中对于标题和内容这两个字段，在储存时使用了`Base64`进行编码，用以防止用户输入的内容对保存文件所使用的`JSON`格式有所干扰。另外时间戳字段只能读取不能进行设定。
+The title and content will be apply `Base64` encode when setting them, which will prevent the content of them disturbing the `JSON` file. And `timestamp` is read-only.
 
-在消息的储存方面，即`storeToFile()`函数，其实现如下：
+The function `storeToFile()` is taking the responsibility of store the message:
 
 ```java
 String name;
@@ -317,11 +315,11 @@ try {
 return name;
 ```
 
-在做好写入文件的准备操作后，首先将要储存的消息转换成`JSON`格式，此处使用了Google的`Gson`。随后对该字符串进行`CRC32`校验，产生长度为8的Hex字符串。随后该字符串与一个值随机长整型数的字符串组合，在一定限度上确保消息保存的文件名不会重复。若遇到文件名重复则返回`null`，这将导致服务器对创建消息的请求回应状态码`500`。这样可使用户尝试重新创建消息，在不同的时间下可以通过时间戳和随机数的变化改变文件名。
+After preparing storing file, the message is first converted into `JSON` format. Then applied `CRC32` to it to generate the part of  `ID` . Another hex string of a random long value will be another part of `ID`, this may prevent duplicate `ID`s. When it really have a duplicate file name, the function will return `null` and cause the server return status code `500` to force user recreate the same message in different time. This will generate a new file name due to different timestamp and random value.
 
-#### 消息的查找（文件）
+#### Find messages(file)
 
-查找文件的操作作为同步静态方法放在了`Messages`类中。函数`findMessageFile（String name）`接收一个字符串变量，返回`Messages`类型的返回值。若消息存在则返回对应的对象，若不存在则返回`null`，这样导致服务器对查询消息的请求返回状态码`410`。函数实现如下：
+A static function placed in `Messages.class` will find the message. The function `findMessageFile（String name）` taking a string value which is the `ID`  and returning a `Messages` value, corresponding the message it found. If no message is found, it return null and cause the server return a status code `410`:
 
 ```java
 public static Messages findMessageFile(String name) throws IOException {
@@ -357,9 +355,7 @@ public static Messages findMessageFile(String name) throws IOException {
 }
 ```
 
-由于重复名字的消息要么没有，要么就只有一个，因此找到一个后返回即可。若未找到则返回`null`。
+## Copyright
 
-## 版权
-
-本项目以Apache 2.0许可授权。
+Apache-2.0
 

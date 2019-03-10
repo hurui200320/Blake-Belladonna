@@ -6,17 +6,7 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="994ca246-9976-4155-a447-9fa9b7da6bcc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Blake_Belladonna_jar__ALL_IN_ONE.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/belladonna.properties" beforeDir="false" afterPath="$PROJECT_DIR$/belladonna.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Messages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Messages.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/PropertiesUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/PropertiesUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Share.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Share.java" afterDir="false" />
-    </list>
+    <list default="true" id="994ca246-9976-4155-a447-9fa9b7da6bcc" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="38" column="20" lean-forward="true" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+            <state relative-caret-position="457">
+              <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#4647#5595#0" expanded="true" />
@@ -77,10 +67,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Messages.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1725">
+            <state relative-caret-position="259">
               <caret line="77" column="39" lean-forward="true" selection-start-line="77" selection-start-column="39" selection-end-line="77" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -152,7 +142,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="984" />
     <option name="width" value="943" />
     <option name="height" value="1087" />
@@ -214,7 +204,7 @@
     <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552049258162" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1552195685312" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -258,15 +248,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1551865992075</updated>
-      <workItem from="1551865993895" duration="53014000" />
+      <workItem from="1551865993895" duration="53193000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="53014000" />
+    <option name="totallyTimeSpent" value="53193000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="54" y="-8" width="1874" height="1096" extended-state="7" />
+    <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Designer" order="0" />
@@ -567,17 +557,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Messages.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1725">
-          <caret line="77" column="39" lean-forward="true" selection-start-line="77" selection-start-column="39" selection-end-line="77" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3945#3946#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Share.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="299">
@@ -590,12 +569,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="38" column="20" lean-forward="true" selection-start-line="38" selection-start-column="20" selection-end-line="38" selection-end-column="20" />
+        <state relative-caret-position="457">
+          <caret line="39" column="35" selection-start-line="39" selection-start-column="35" selection-end-line="39" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#4647#5595#0" expanded="true" />
             <element signature="e#5594#5595#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/info/skyblond/Blake/Belladonna/Messages.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="77" column="39" lean-forward="true" selection-start-line="77" selection-start-column="39" selection-end-line="77" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3945#3946#0" expanded="true" />
           </folding>
         </state>
       </provider>
