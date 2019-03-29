@@ -115,12 +115,31 @@ Messages messages = new Messages();
 messages.setTitle(String.join("",raw.get(POST_TITLE_FIELD)));
 String[] body = String.join("",raw.get(POST_CONTENT_FIELD)).split("\n");
 StringBuilder sb = new StringBuilder();
+boolean isRaw = false;
 for(String s : body){
-	if(s.startsWith("#!&$>") && s.length() > 5){
-		sb.append(s.substring(5));
-	}else {
-		sb.append("<p>" + s + "</p>\n");
-	}
+    if(!isRaw && s.startsWith("#!&$>") && s.length() > 5){
+        sb.append(s.substring(5));
+    }else if(isRaw || s.startsWith("#!&$<")){
+        isRaw = true;
+        if(s.startsWith("#!&$<"))
+            sb.append(s.substring(5) + "\n");
+        else if(s.contains("&!>")){
+            sb.append(s.split("&!>")[0] + "\n");
+            isRaw = false;
+        }else
+            sb.append(s + "\n");
+    }else {
+        if(s.equals(null) || s.equals(""))
+            sb.append("<br>");
+        else{
+            s = s.replace("&", "&amp;");
+            s = s.replace(" ","&nbsp;"); // html Escape characters
+            s = s.replace("<", "&lt;");
+            s = s.replace(">", "&gt;");
+            s = s.replace("\"", "&quot;");
+            sb.append("<p>" + s + "</p>\n");
+        }
+    }
 }
 messages.setContent(sb.toString());
 
@@ -141,7 +160,7 @@ ctx.header("content-type","text/html; charset=UTF-8");
 ctx.result(String.join("\n", Files.readAllLines(PropertiesUtils.getProperties().getSucceedTheme())).replace("{{% code %}}", result));
 ```
 
-The title of the message won't change. Every line of the content will be translated in `HTML` paragraph, unless it start with special characters `#!&$>`. Then store it and return a corresponding `ID`. At this time, server return status code `201` and render the web page according to the template. In default it's `createSucceed.html`. The placeholder `{{% code %}}` is the `ID`.
+The title won't change. Every line will be translated into HTML-style paragraph and replace html characters(like `& < > "`), unless it starts with `#!&$>`. For multiple lines, starting with `#!&$<` in a line means there is a paragraph of content should be reserved, just like comments `/**/` in C or Java. You have to put that string at the head of line, and end it with `&!>` in anywhere. Noticed, the content after `&!>` will be discarded. Then the message will be stored and server returns a corresponding `ID`. At this time, server return status code `201` and render the web page according to the template. In default it's `createSucceed.html`. The placeholder `{{% code %}}` is the `ID`.
 
 #### `/*` `GET`
 

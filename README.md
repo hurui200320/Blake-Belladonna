@@ -113,12 +113,31 @@ Messages messages = new Messages();
 messages.setTitle(String.join("",raw.get(POST_TITLE_FIELD)));
 String[] body = String.join("",raw.get(POST_CONTENT_FIELD)).split("\n");
 StringBuilder sb = new StringBuilder();
+boolean isRaw = false;
 for(String s : body){
-	if(s.startsWith("#!&$>") && s.length() > 5){
-		sb.append(s.substring(5));
-	}else {
-		sb.append("<p>" + s + "</p>\n");
-	}
+    if(!isRaw && s.startsWith("#!&$>") && s.length() > 5){
+        sb.append(s.substring(5));
+    }else if(isRaw || s.startsWith("#!&$<")){
+        isRaw = true;
+        if(s.startsWith("#!&$<"))
+            sb.append(s.substring(5) + "\n");
+        else if(s.contains("&!>")){
+            sb.append(s.split("&!>")[0] + "\n");
+            isRaw = false;
+        }else
+            sb.append(s + "\n");
+    }else {
+        if(s.equals(null) || s.equals(""))
+            sb.append("<br>");
+        else{
+            s = s.replace("&", "&amp;");
+            s = s.replace(" ","&nbsp;"); // html Escape characters
+            s = s.replace("<", "&lt;");
+            s = s.replace(">", "&gt;");
+            s = s.replace("\"", "&quot;");
+            sb.append("<p>" + s + "</p>\n");
+        }
+    }
 }
 messages.setContent(sb.toString());
 
@@ -139,7 +158,7 @@ ctx.header("content-type","text/html; charset=UTF-8");
 ctx.result(String.join("\n", Files.readAllLines(PropertiesUtils.getProperties().getSucceedTheme())).replace("{{% code %}}", result));
 ```
 
-消息标题保留原样，针对每一行内容都翻译成`HTML`的段落。如果以特定的`#!&$>`开头，则不进行翻译。完成后对消息进行储存，储存成功后将得到一个对应的`ID`，此时服务器返回状态码`201`，同时引用模板将得到的`ID`显示给用户。默认情况下模板是与程序同目录下的`createSucceed.html`，其中的占位符`{{% code %}}`替换成得到的`ID`。
+消息标题保留原样，针对每一行内容都翻译成`HTML`的段落并进行转义。如果以特定的`#!&$>`开头，则不进行翻译。如果一行以`#!&$<`开头，则表示一段内容不进行翻译，则类似C语言中`/**/`这样的段落注释，但要求上述字符串前不能有多于字符。段落保留以`&!>`结束，该字符串可在行内的任意位置出现，一行内其后的内容将被丢弃。上述操作完成后对消息进行储存，储存成功后将得到一个对应的`ID`，此时服务器返回状态码`201`，同时引用模板将得到的`ID`显示给用户。默认情况下模板是与程序同目录下的`createSucceed.html`，其中的占位符`{{% code %}}`替换成得到的`ID`。
 
 #### `/*` `GET`
 
