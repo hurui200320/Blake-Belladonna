@@ -238,9 +238,9 @@ class Property{
     public static final String PORT_FIELD = "port";
     private String ip = "0.0.0.0";
     public static final String IP_FIELD = "ip";
+
 //    private int dataMode = 0;
 //    public static final String DATA_MODE_FIELD = "date_mode";
-
 //    private String mysqlAddr = "";
 //    public static final String MYSQL_ADDR_FIELD = "mysql_addr";
 //    private int mysqlPort = 3306;

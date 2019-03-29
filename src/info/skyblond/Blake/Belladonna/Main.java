@@ -1,13 +1,5 @@
 package info.skyblond.Blake.Belladonna;
 
-/*
-* TODO:
-*   1. user's interface
-*       2.1 onsuccess, show code
-*   3. To code. Web interface to add "#!&$>" before code
-*/
-
-
 import io.javalin.Javalin;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -79,11 +71,30 @@ public class Main {
                 messages.setTitle(String.join("",raw.get(POST_TITLE_FIELD)));
                 String[] body = String.join("",raw.get(POST_CONTENT_FIELD)).split("\n");
                 StringBuilder sb = new StringBuilder();
+                boolean isRaw = false;
                 for(String s : body){
-                    if(s.startsWith("#!&$>") && s.length() > 5){
+                    if(!isRaw && s.startsWith("#!&$>") && s.length() > 5){
                         sb.append(s.substring(5));
+                    }else if(isRaw || s.startsWith("#!&$<")){
+                        isRaw = true;
+                        if(s.startsWith("#!&$<"))
+                            sb.append(s.substring(5) + "\n");
+                        else if(s.contains("&!>")){
+                            sb.append(s.split("&!>")[0] + "\n");
+                            isRaw = false;
+                        }else
+                            sb.append(s + "\n");
                     }else {
-                        sb.append("<p>" + s + "</p>\n");
+                        if(s.equals(null) || s.equals(""))
+                            sb.append("<br>");
+                        else{
+                            s = s.replace("&", "&amp;");
+                            s = s.replace(" ","&nbsp;"); // html Escape characters
+                            s = s.replace("<", "&lt;");
+                            s = s.replace(">", "&gt;");
+                            s = s.replace("\"", "&quot;");
+                            sb.append("<p>" + s + "</p>\n");
+                        }
                     }
                 }
                 messages.setContent(sb.toString());
