@@ -2,7 +2,7 @@
 
 基于Java和Javalin的开源阅后即焚服务。
 
-**English version is [here](./README_EN.md)(*unfinished*).**
+**English version is [here](./README_EN.md).**
 
 [TOC]
 
@@ -319,7 +319,7 @@ return name;
 
 #### 消息的查找（文件）
 
-查找文件的操作作为同步静态方法放在了`Messages`类中。函数`findMessageFile（String name）`接收一个字符串变量，返回`Messages`类型的返回值。若消息存在则返回对应的对象，若不存在则返回`null`，这样导致服务器对查询消息的请求返回状态码`410`。函数实现如下：
+查找文件的操作作为静态方法放在了`Messages`类中。函数`findMessageFile（String name）`接收一个字符串变量，返回`Messages`类型的返回值。若消息存在则返回对应的对象，若不存在则返回`null`，这样导致服务器对查询消息的请求返回状态码`410`。函数实现如下：
 
 ```java
 public static Messages findMessageFile(String name) throws IOException {
