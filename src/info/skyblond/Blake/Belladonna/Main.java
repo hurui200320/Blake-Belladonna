@@ -78,9 +78,11 @@ public class Main {
                     }else if(isRaw || s.startsWith("#!&$<")){
                         isRaw = true;
                         if(s.startsWith("#!&$<"))
-                            sb.append(s.substring(5) + "\n");
+                            if(s.length() > 5)
+                                sb.append(s.substring(5) + "\n");
                         else if(s.contains("&!>")){
-                            sb.append(s.split("&!>")[0] + "\n");
+                            if(s.split("&!>")[0] != null)
+                                sb.append(s.split("&!>")[0] + "\n");
                             isRaw = false;
                         }else
                             sb.append(s + "\n");
