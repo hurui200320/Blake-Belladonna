@@ -1,4 +1,6 @@
 # Blake-Belladonna
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhurui200320%2FBlake-Belladonna.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhurui200320%2FBlake-Belladonna?ref=badge_shield)
+
 
 基于Java和Javalin的开源阅后即焚服务。
 
@@ -380,3 +382,7 @@ public static Messages findMessageFile(String name) throws IOException {
 
 本项目以Apache 2.0许可授权。
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fhurui200320%2FBlake-Belladonna.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fhurui200320%2FBlake-Belladonna?ref=badge_large)
